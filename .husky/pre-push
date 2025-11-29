@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 # Run Prettier check before push
 npx prettier --check . || {
   echo "❌ Prettier check failed. Please run 'npx prettier --write .' to fix formatting issues."
