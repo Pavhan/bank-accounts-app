@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { AppSidebar } from '@components/components/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@components/components/ui/sidebar';
+import { StoreProvider } from '@components/store/StoreProvider';
 import './globals.css';
 
 const geistSans = localFont({
@@ -28,10 +29,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <SidebarProvider>
-          <AppSidebar variant="inset" />
-          <SidebarInset>{children}</SidebarInset>
-        </SidebarProvider>
+        <StoreProvider>
+          <SidebarProvider>
+            <AppSidebar variant="inset" />
+            <SidebarInset>{children}</SidebarInset>
+          </SidebarProvider>
+        </StoreProvider>
       </body>
     </html>
   );
