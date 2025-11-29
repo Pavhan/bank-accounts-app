@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run Prettier check before push
+npx prettier --check . || {
+  echo "❌ Prettier check failed. Please run 'npx prettier --write .' to fix formatting issues."
+  exit 1
+}
+
+# Run ESLint check before push
+npm run lint || {
+  echo "❌ ESLint check failed. Please fix linting errors."
+  exit 1
+}
+
+# Run TypeScript type check before push
+npx tsc --noEmit || {
+  echo "❌ TypeScript type check failed. Please fix type errors."
+  exit 1
+}
+
+echo "✅ All checks passed!"
+
