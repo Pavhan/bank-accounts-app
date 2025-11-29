@@ -33,8 +33,8 @@ const data = {
       icon: UsersIcon,
     },
     {
-      title: 'Form Config',
-      url: '/form-config',
+      title: 'Form Configurator',
+      url: '/form-configurator',
       icon: ClipboardListIcon,
     },
   ],

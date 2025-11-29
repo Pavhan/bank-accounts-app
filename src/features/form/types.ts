@@ -1,4 +1,4 @@
-export type FieldType = 'text' | 'number' | 'date' | 'select' | 'gender' | 'category';
+export type FieldType = 'text' | 'number' | 'date' | 'select';
 
 export interface FormFieldDefinition {
   id: string;

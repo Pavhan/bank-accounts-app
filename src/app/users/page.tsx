@@ -1,6 +1,10 @@
 'use client';
 
+import { useState } from 'react';
+import { TrashIcon } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
+import { ConfirmDialog } from '@components/components/confirm-dialog';
 import { SiteHeader } from '@components/components/site-header';
 import { Button } from '@components/components/ui/button';
 import {
@@ -18,11 +22,33 @@ import {
   TableHeader,
   TableRow,
 } from '@components/components/ui/table';
-import { useAppSelector } from '@components/store/store';
+import { deleteRunner } from '@components/features/runners/runnersSlice';
+import { useAppDispatch, useAppSelector } from '@components/store/store';
 
 export default function UsersPage() {
+  const dispatch = useAppDispatch();
   const runners = useAppSelector((state) => state.runners.items);
   const formDefinition = useAppSelector((state) => state.form.formDefinition);
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [runnerToDelete, setRunnerToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
+  const handleDeleteRunner = (runnerId: string, runnerName: string) => {
+    setRunnerToDelete({ id: runnerId, name: runnerName });
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteRunner = () => {
+    if (runnerToDelete) {
+      dispatch(deleteRunner(runnerToDelete.id));
+      toast.success('Runner deleted successfully');
+      setRunnerToDelete(null);
+      setDeleteDialogOpen(false);
+    }
+  };
 
   return (
     <>
@@ -58,9 +84,23 @@ export default function UsersPage() {
                               {String(runner.values.gender)}
                             </TableCell>
                             <TableCell className="text-right">
-                              <Button asChild variant="ghost" size="sm">
-                                <Link href={`/users/${runner.id}`}>Detail</Link>
-                              </Button>
+                              <div className="flex justify-end gap-2">
+                                <Button asChild variant="ghost" size="sm">
+                                  <Link href={`/users/${runner.id}`}>Detail</Link>
+                                </Button>
+                                <Button
+                                  onClick={() =>
+                                    handleDeleteRunner(
+                                      runner.id,
+                                      `${String(runner.values.firstName)} ${String(runner.values.lastName)}`
+                                    )
+                                  }
+                                  variant="destructive"
+                                  size="sm"
+                                >
+                                  <TrashIcon className="h-4 w-4" />
+                                </Button>
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -77,6 +117,17 @@ export default function UsersPage() {
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Delete Runner"
+        description='Are you sure you want to delete "{itemName}"? This action cannot be undone.'
+        itemName={runnerToDelete?.name}
+        confirmLabel="Delete"
+        variant="destructive"
+        onConfirm={confirmDeleteRunner}
+      />
     </>
   );
 }

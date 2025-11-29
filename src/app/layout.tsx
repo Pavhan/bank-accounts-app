@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { AppSidebar } from '@components/components/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@components/components/ui/sidebar';
+import { Toaster } from '@components/components/ui/sonner';
 import { StoreProvider } from '@components/store/StoreProvider';
 import './globals.css';
 
@@ -34,6 +35,7 @@ export default function RootLayout({
             <AppSidebar variant="inset" />
             <SidebarInset>{children}</SidebarInset>
           </SidebarProvider>
+          <Toaster />
         </StoreProvider>
       </body>
     </html>

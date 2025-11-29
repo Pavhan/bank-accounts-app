@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { notFound, useParams, useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { ConfirmDialog } from '@components/components/confirm-dialog';
+import { FormField } from '@components/components/form-fields';
 import { SiteHeader } from '@components/components/site-header';
 import { Button } from '@components/components/ui/button';
 import {
@@ -12,16 +15,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@components/components/ui/card';
-import { Input } from '@components/components/ui/input';
-import { Label } from '@components/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@components/components/ui/select';
-import type { FormFieldDefinition } from '@components/features/form/types';
 import { deleteRunner, updateRunner } from '@components/features/runners/runnersSlice';
 import { useAppDispatch, useAppSelector } from '@components/store/store';
 
@@ -39,6 +32,7 @@ export default function RunnerDetailPage() {
   const [formValues, setFormValues] = useState<Record<string, string | number>>(
     runner?.values || {}
   );
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   if (!runner) {
     notFound();
@@ -50,108 +44,17 @@ export default function RunnerDetailPage() {
   };
 
   const handleDelete = () => {
-    if (confirm('Are you sure you want to delete this runner?')) {
-      dispatch(deleteRunner(runnerId));
-      router.push('/users');
-    }
+    setDeleteDialogOpen(true);
   };
 
-  const renderField = (field: FormFieldDefinition) => {
-    const value = formValues[field.id];
-    const displayValue = value !== undefined ? String(value) : '';
+  const confirmDeleteRunner = () => {
+    dispatch(deleteRunner(runnerId));
+    toast.success('Runner deleted successfully');
+    router.push('/users');
+  };
 
-    if (!isEditing) {
-      return (
-        <div key={field.id} className="space-y-2">
-          <Label>{field.label}</Label>
-          <div className="text-sm text-muted-foreground">
-            {displayValue || <span className="italic">Not provided</span>}
-          </div>
-        </div>
-      );
-    }
-
-    switch (field.type) {
-      case 'text':
-        return (
-          <div key={field.id} className="space-y-2">
-            <Label htmlFor={field.id}>
-              {field.label}
-              {field.required && <span className="text-destructive"> *</span>}
-            </Label>
-            <Input
-              id={field.id}
-              value={displayValue}
-              onChange={(e) => setFormValues({ ...formValues, [field.id]: e.target.value })}
-              required={field.required}
-            />
-          </div>
-        );
-
-      case 'number':
-        return (
-          <div key={field.id} className="space-y-2">
-            <Label htmlFor={field.id}>
-              {field.label}
-              {field.required && <span className="text-destructive"> *</span>}
-            </Label>
-            <Input
-              id={field.id}
-              type="number"
-              value={displayValue}
-              onChange={(e) => setFormValues({ ...formValues, [field.id]: Number(e.target.value) })}
-              required={field.required}
-            />
-          </div>
-        );
-
-      case 'date':
-        return (
-          <div key={field.id} className="space-y-2">
-            <Label htmlFor={field.id}>
-              {field.label}
-              {field.required && <span className="text-destructive"> *</span>}
-            </Label>
-            <Input
-              id={field.id}
-              type="date"
-              value={displayValue}
-              onChange={(e) => setFormValues({ ...formValues, [field.id]: e.target.value })}
-              required={field.required}
-            />
-          </div>
-        );
-
-      case 'select':
-      case 'gender':
-      case 'category':
-        return (
-          <div key={field.id} className="space-y-2">
-            <Label htmlFor={field.id}>
-              {field.label}
-              {field.required && <span className="text-destructive"> *</span>}
-            </Label>
-            <Select
-              value={displayValue}
-              onValueChange={(value) => setFormValues({ ...formValues, [field.id]: value })}
-            >
-              <SelectTrigger id={field.id}>
-                <SelectValue placeholder={`Select ${field.label.toLowerCase()}`} />
-              </SelectTrigger>
-              <SelectContent>
-                {field.options?.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        );
-
-      default:
-        return null;
-    }
+  const handleFieldChange = (fieldId: string, value: string | number) => {
+    setFormValues({ ...formValues, [fieldId]: value });
   };
 
   return (
@@ -176,7 +79,15 @@ export default function RunnerDetailPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-6 md:grid-cols-2">
-                    {formDefinition.fields.map((field) => renderField(field))}
+                    {formDefinition.fields.map((field) => (
+                      <FormField
+                        key={field.id}
+                        field={field}
+                        value={formValues[field.id]}
+                        isEditing={isEditing}
+                        onChange={handleFieldChange}
+                      />
+                    ))}
                   </div>
                 </CardContent>
                 <CardFooter>
@@ -205,6 +116,17 @@ export default function RunnerDetailPage() {
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Delete Runner"
+        description='Are you sure you want to delete "{itemName}"? This action cannot be undone.'
+        itemName={`${String(formValues.firstName)} ${String(formValues.lastName)}`}
+        confirmLabel="Delete"
+        variant="destructive"
+        onConfirm={confirmDeleteRunner}
+      />
     </>
   );
 }

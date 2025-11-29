@@ -27,14 +27,14 @@ const defaultFormDefinition: FormDefinition = {
     {
       id: 'gender',
       label: 'Gender',
-      type: 'gender',
+      type: 'select',
       required: true,
       options: ['male', 'female'],
     },
     {
       id: 'category',
       label: 'Category',
-      type: 'category',
+      type: 'select',
       required: true,
       options: ['5 km', '10 km', 'Half marathon'],
     },

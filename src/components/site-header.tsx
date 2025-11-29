@@ -7,7 +7,7 @@ import { SidebarTrigger } from '@components/components/ui/sidebar';
 const pageTitles: Record<string, string> = {
   '/': 'Dashboard',
   '/users': 'Runners',
-  '/form-config': 'Form Configuration',
+  '/form-configurator': 'Form Configurator',
   '/register': 'Registration',
 };
 
