@@ -17,4 +17,3 @@ npx tsc --noEmit || {
 }
 
 echo "✅ All checks passed!"
-
