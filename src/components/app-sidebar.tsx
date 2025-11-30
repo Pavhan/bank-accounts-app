@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { ArrowUpCircleIcon, ClipboardListIcon, LayoutDashboardIcon, UsersIcon } from 'lucide-react';
+import { ClipboardListIcon, LayoutDashboardIcon, UsersIcon } from 'lucide-react';
 import Link from 'next/link';
 import { NavMain } from '@components/components/nav-main';
 import { NavUser } from '@components/components/nav-user';

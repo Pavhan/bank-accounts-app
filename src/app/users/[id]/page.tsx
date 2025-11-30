@@ -5,7 +5,6 @@ import { notFound, useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ConfirmDialog } from '@components/components/confirm-dialog';
 import { FormField } from '@components/components/form-fields';
-import { SiteHeader } from '@components/components/site-header';
 import { Button } from '@components/components/ui/button';
 import {
   Card,
@@ -59,63 +58,54 @@ export default function RunnerDetailPage() {
 
   return (
     <>
-      <SiteHeader />
-      <div className="flex flex-1 flex-col">
-        <div className="@container/main flex flex-1 flex-col gap-2">
-          <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            <div className="px-4 lg:px-6">
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>
-                        {String(formValues.firstName)} {String(formValues.lastName)}
-                      </CardTitle>
-                      <CardDescription>
-                        Registered on {new Date(runner.createdAt).toLocaleDateString()}
-                      </CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-6 md:grid-cols-2">
-                    {formDefinition.fields.map((field) => (
-                      <FormField
-                        key={field.id}
-                        field={field}
-                        value={formValues[field.id]}
-                        isEditing={isEditing}
-                        onChange={handleFieldChange}
-                      />
-                    ))}
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <div className="flex gap-2">
-                    {!isEditing ? (
-                      <>
-                        <Button onClick={() => setIsEditing(true)} variant="outline">
-                          Edit
-                        </Button>
-                        <Button onClick={handleDelete} variant="destructive">
-                          Delete
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button onClick={() => setIsEditing(false)} variant="outline">
-                          Cancel
-                        </Button>
-                        <Button onClick={handleSave}>Save changes</Button>
-                      </>
-                    )}
-                  </div>
-                </CardFooter>
-              </Card>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>
+                {String(formValues.firstName)} {String(formValues.lastName)}
+              </CardTitle>
+              <CardDescription>
+                Registered on {new Date(runner.createdAt).toLocaleDateString()}
+              </CardDescription>
             </div>
           </div>
-        </div>
-      </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-6 md:grid-cols-2">
+            {formDefinition.fields.map((field) => (
+              <FormField
+                key={field.id}
+                field={field}
+                value={formValues[field.id]}
+                isEditing={isEditing}
+                onChange={handleFieldChange}
+              />
+            ))}
+          </div>
+        </CardContent>
+        <CardFooter>
+          <div className="flex gap-2">
+            {!isEditing ? (
+              <>
+                <Button onClick={() => setIsEditing(true)} variant="outline">
+                  Edit
+                </Button>
+                <Button onClick={handleDelete} variant="destructive">
+                  Delete
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button onClick={() => setIsEditing(false)} variant="outline">
+                  Cancel
+                </Button>
+                <Button onClick={handleSave}>Save changes</Button>
+              </>
+            )}
+          </div>
+        </CardFooter>
+      </Card>
 
       <ConfirmDialog
         open={deleteDialogOpen}

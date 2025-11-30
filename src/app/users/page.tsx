@@ -5,7 +5,6 @@ import { TrashIcon } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { ConfirmDialog } from '@components/components/confirm-dialog';
-import { SiteHeader } from '@components/components/site-header';
 import { Button } from '@components/components/ui/button';
 import {
   Card,
@@ -28,7 +27,6 @@ import { useAppDispatch, useAppSelector } from '@components/store/store';
 export default function UsersPage() {
   const dispatch = useAppDispatch();
   const runners = useAppSelector((state) => state.runners.items);
-  const formDefinition = useAppSelector((state) => state.form.formDefinition);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [runnerToDelete, setRunnerToDelete] = useState<{
@@ -52,71 +50,58 @@ export default function UsersPage() {
 
   return (
     <>
-      <SiteHeader />
-      <div className="flex flex-1 flex-col">
-        <div className="@container/main flex flex-1 flex-col gap-2">
-          <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            <div className="px-4 lg:px-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Runners</CardTitle>
-                  <CardDescription>All registered runners ({runners.length} total)</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {runners.length > 0 ? (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Category</TableHead>
-                          <TableHead>Gender</TableHead>
-                          <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {runners.map((runner) => (
-                          <TableRow key={runner.id}>
-                            <TableCell className="font-medium">
-                              {String(runner.values.firstName)} {String(runner.values.lastName)}
-                            </TableCell>
-                            <TableCell>{String(runner.values.category)}</TableCell>
-                            <TableCell className="capitalize">
-                              {String(runner.values.gender)}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <div className="flex justify-end gap-2">
-                                <Button asChild variant="ghost" size="sm">
-                                  <Link href={`/users/${runner.id}`}>Detail</Link>
-                                </Button>
-                                <Button
-                                  onClick={() =>
-                                    handleDeleteRunner(
-                                      runner.id,
-                                      `${String(runner.values.firstName)} ${String(runner.values.lastName)}`
-                                    )
-                                  }
-                                  variant="destructive"
-                                  size="sm"
-                                >
-                                  <TrashIcon className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  ) : (
-                    <div className="py-8 text-center text-muted-foreground">
-                      No runners registered yet.
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Runners</CardTitle>
+          <CardDescription>All registered runners ({runners.length} total)</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {runners.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Gender</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {runners.map((runner) => (
+                  <TableRow key={runner.id}>
+                    <TableCell className="font-medium">
+                      {String(runner.values.firstName)} {String(runner.values.lastName)}
+                    </TableCell>
+                    <TableCell>{String(runner.values.category)}</TableCell>
+                    <TableCell className="capitalize">{String(runner.values.gender)}</TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button asChild variant="ghost" size="sm">
+                          <Link href={`/users/${runner.id}`}>Detail</Link>
+                        </Button>
+                        <Button
+                          onClick={() =>
+                            handleDeleteRunner(
+                              runner.id,
+                              `${String(runner.values.firstName)} ${String(runner.values.lastName)}`
+                            )
+                          }
+                          variant="destructive"
+                          size="sm"
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="py-8 text-center text-muted-foreground">No runners registered yet.</div>
+          )}
+        </CardContent>
+      </Card>
 
       <ConfirmDialog
         open={deleteDialogOpen}

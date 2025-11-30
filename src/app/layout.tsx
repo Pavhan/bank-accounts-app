@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { AppSidebar } from '@components/components/app-sidebar';
+import { SiteHeader } from '@components/components/site-header';
 import { SidebarInset, SidebarProvider } from '@components/components/ui/sidebar';
 import { Toaster } from '@components/components/ui/sonner';
 import { StoreProvider } from '@components/store/StoreProvider';
@@ -33,7 +34,13 @@ export default function RootLayout({
         <StoreProvider>
           <SidebarProvider>
             <AppSidebar variant="inset" />
-            <SidebarInset>{children}</SidebarInset>
+            <SidebarInset>
+              <SiteHeader />
+
+              <div className="flex flex-1 flex-col gap-2 p-4 @container/main lg:p-6">
+                {children}
+              </div>
+            </SidebarInset>
           </SidebarProvider>
           <Toaster />
         </StoreProvider>
